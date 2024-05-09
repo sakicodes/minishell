@@ -39,12 +39,11 @@ void	start(t_data *data)
 		if (ft_strlen(data->line) == 0)
 			continue ;
 		add_history(data->line);
-		printf("this is the line: %s\n", data->line);
-		printf("line length: %d\n", (int)ft_strlen(data->line));
 		compare(data);
-		// parsing
-		// shell processes:
+		// parsing (split the line as necessary and save them to a char double ptr)
+		// shell processes: (forking should be done here i guess)
 		// pipes, redirections, normal cmds etc etc
+		// most prob will need to free the commands char double ptr 
 		free(data->line);
 	}
 }

@@ -1,42 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sp <marvin@42.fr>                          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 18:09:12 by sp                #+#    #+#             */
-/*   Updated: 2024/05/07 18:09:15 by sp               ###   ########.fr       */
+/*   Created: 2024/05/09 21:24:11 by sp                #+#    #+#             */
+/*   Updated: 2024/05/09 21:24:16 by sp               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
+# include <unistd.h>
 # include "libft/libft.h"
 # include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <fcntl.h>
 # include <sys/types.h>
-# include <sys/time.h>
-# include <sys/resource.h>
-# include <sys/wait.h>
-# include <sys/stat.h>
-# include <signal.h>
+# include <fcntl.h>
 # include <string.h>
-# include <dirent.h>
-# include <sys/ioctl.h>
-# include <limits.h>
-# include "pipex.h"
+# include <sys/wait.h>
 
-typedef struct s_data {
-	char	curr_dir[1024];
-	char	*prompt;
-	char	*line;
-	int		death;
-}				t_data;
+int		file_opener(char *file, int check);
+void	exit_handler(char c, char *cmd);
+void	ft_free(char **array);
+void	heredoc_child(char *limit, int file);
+void	ft_heredoc(char **array);
+char	*getpath(char **envp);
+char	*check_path(char **paths, char *cf);
+void	ft_execute(char *cmd, char **envp);
+void	pipex(char *cmd, char **envp);
+int		file_ops(int index, char **array);
 
 #endif
