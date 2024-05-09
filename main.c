@@ -21,24 +21,45 @@ void	compare(t_data *data)
 	}
 }
 
+int	initialise(t_data *data)
+{
+	getcwd(data->curr_dir, 1024);
+	data->prompt = ft_strjoin(data->curr_dir, "> \0");
+	if (!data->prompt)
+		return (1);
+	data->death = 0;
+	return (0);
+}
+
+void	start(t_data *data)
+{
+	while (data->death == 0)
+	{
+		data->line = readline(data->prompt);
+		if (ft_strlen(data->line) == 0)
+			continue ;
+		add_history(data->line);
+		printf("this is the line: %s\n", data->line);
+		printf("line length: %d\n", (int)ft_strlen(data->line));
+		compare(data);
+		// parsing
+		// shell processes:
+		// pipes, redirections, normal cmds etc etc
+		free(data->line);
+	}
+}
+
 int main(void)
 {
 	t_data data;
 
-	getcwd(data.curr_dir, 1024);
-	data.prompt = ft_strjoin(data.curr_dir, "> \0");
-	data.death = 0;
-	while (data.death == 0)
+	if (initialise(&data) == 1)
 	{
-		data.line = readline(data.prompt);
-		if (ft_strlen(data.line) == 0)
-			continue ;
-		add_history(data.line);
-		printf("this is the line: %s\n", data.line);
-		printf("line length: %d\n", (int)ft_strlen(data.line));
-		compare(&data);
-		free(data.line);
+		printf("initialising failed\n");
+		return (1);
 	}
+	// signal handling
+	start(&data);
 	free(data.prompt);
 	return (0);
 }
