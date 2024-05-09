@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -lreadline
 
-SRCS = main.c pipex.c pipex_utils.c
+SRCS = main.c
 OBJS = $(SRCS:.c=.o)
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a

@@ -15,6 +15,7 @@
 
 # include <unistd.h>
 # include "libft/libft.h"
+# include "minishell.h"
 # include <stdio.h>
 # include <sys/types.h>
 # include <fcntl.h>
@@ -29,7 +30,7 @@ void	ft_heredoc(char **array);
 char	*getpath(char **envp);
 char	*check_path(char **paths, char *cf);
 void	ft_execute(char *cmd, char **envp);
-void	pipex(char *cmd, char **envp);
+void	piping(char *cmd, char **envp);
 int		file_ops(int index, char **array);
 
 #endif

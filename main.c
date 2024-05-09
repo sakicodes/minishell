@@ -21,9 +21,10 @@ void	compare(t_data *data)
 	}
 }
 
-int	initialise(t_data *data)
+int	initialise(t_data *data, char **envp)
 {
 	getcwd(data->curr_dir, 1024);
+	data->environ = envp;
 	data->prompt = ft_strjoin(data->curr_dir, "> \0");
 	if (!data->prompt)
 		return (1);
@@ -48,11 +49,16 @@ void	start(t_data *data)
 	}
 }
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
 	t_data data;
 
-	if (initialise(&data) == 1)
+	if (argc != 1)
+	{
+		printf("No aruguments please !\n");
+		return (1);
+	}
+	if (initialise(&data, envp) == 1)
 	{
 		printf("initialising failed\n");
 		return (1);
