@@ -30,7 +30,7 @@
 # include <dirent.h>
 # include <sys/ioctl.h>
 # include <limits.h>
-# include "pipex.h"
+//# include "pipex.h"
 
 typedef struct s_data {
 	char	curr_dir[1024];
