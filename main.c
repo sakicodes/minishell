@@ -42,9 +42,8 @@ void	start(t_data *data)
 			continue ;
 		add_history(data->line);
 		compare(data);
-		// parsing (split the line as necessary and save them to a char double ptr)
-		// shell processes: (forking should be done here i guess)
-		// pipes, redirections, normal cmds etc etc
+		// parsing (split the line as necessary and save them to a char double ptr(char **input))
+		// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
 		// most prob will need to free the commands char double ptr 
 		free(data->line);
 	}
