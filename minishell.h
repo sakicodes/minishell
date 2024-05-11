@@ -38,6 +38,7 @@ typedef struct s_data {
 	char	*line;
 	char	**input;
 	int		num_of_inputs;
+	char	**environ;
 	int		death;
 }				t_data;
 
