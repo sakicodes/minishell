@@ -29,6 +29,7 @@ int	initialise(t_data *data, char **envp)
 	if (!data->prompt)
 		return (1);
 	data->death = 0;
+	data->num_of_inputs = 0;
 	return (0);
 }
 
