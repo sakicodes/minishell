@@ -36,6 +36,8 @@ typedef struct s_data {
 	char	curr_dir[1024];
 	char	*prompt;
 	char	*line;
+	char	**input;
+	int		num_of_inputs;
 	int		death;
 }				t_data;
 
