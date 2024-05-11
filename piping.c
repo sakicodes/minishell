@@ -115,20 +115,20 @@ int	file_ops(int index, char **array)
 	int	f1;
 	int	f2;
 
-	if (ft_strncmp(array[1], "here_doc", ft_strlen("here_doc")) == 0)
-	{
-		if (index < 6)
-			exit_handler('i', NULL);
-		f1 = 0;
-		f2 = file_opener(array[index - 1], 2);
-		ft_heredoc(array);
-	}
-	else
-	{
+	// if (ft_strncmp(array[1], "here_doc", ft_strlen("here_doc")) == 0)
+	// {
+	// 	if (index < 6)
+	// 		exit_handler('i', NULL);
+	// 	f1 = 0;
+	// 	f2 = file_opener(array[index - 1], 2);
+	// 	ft_heredoc(array);
+	// }
+	// else
+	// {
 		f1 = file_opener(array[1], 1);
 		f2 = file_opener(array[index - 1], 0);
 		dup2(f1, STDIN_FILENO);
 		close(f1);
-	}
+	// }
 	return (f2);
 }

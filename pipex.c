@@ -22,11 +22,11 @@ void pipex(t_data *data)
 	// 	i = 3;
 	// else
 	// 	i = 2;
-	while (i < (argc - 2))
-		piping(argv[i++], data->environ);
+	while (i < (data->num_of_inputs - 2))
+		piping(data->input[i++], data->environ);
 	dup2(f2, STDOUT_FILENO);
 	close(f2);
-	ft_execute(argv[argc - 2], data->environ);
+	ft_execute(data->input[data->num_of_inputs - 2], data->environ);
 	wait(NULL);
 	return (0);
 }
