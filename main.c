@@ -12,13 +12,41 @@
 
 #include "minishell.h"
 
-void	compare(t_data *data)
+void	change_directory(t_data *data)
 {
-	if (ft_strncmp(data->line, "exit\0", ft_strlen(data->line)) == 0)
+	char	*ptr;
+	char	*newpath;
+
+	if (data->cmds->cmdwithflags[1])
+	{
+		if (ft_strncmp(data->cmds[0].cmdwithflags[1], "..\0", 2) == 0)
+		{
+			ptr = ft_strrchr(data->curr_dir, '/');
+			newpath = ft_substr(data->curr_dir, 0, ptr - data->curr_dir);
+			chdir(newpath);
+			getcwd(data->curr_dir, 1024);
+		}
+	}
+}
+
+int	compare(t_data *data)
+{
+	int	ret;
+
+	ret = 0;
+	if (ft_strncmp(data->line, "exit\0", 4) == 0)
 	{
 		data->death = 1;
 		printf("exit, goodbye!\n");
 	}
+	else if (ft_strncmp(data->line, "pwd\0", 3) == 0)
+	{
+		printf("%s\n", data->curr_dir);
+		ret = 1;
+	}
+	// else if (ft_strncmp(data->line, "cd\0", 2) == 0)
+	// 	change_directory(data);
+	return (ret);
 }
 
 int	initialise(t_data *data, char **envp)
@@ -40,10 +68,12 @@ void	start(t_data *data)
 		if (ft_strlen(data->line) == 0)
 			continue ;
 		add_history(data->line);
-		// compare(data);
 		// parsing (split the line as necessary and save them to a char double ptr(char **input))
-		// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
-		// most prob will need to free the commands char double ptr 
+		if (compare(data) == 0)
+		{
+			// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
+			// most prob will need to free the commands char double ptr 
+		}
 		free(data->line);
 	}
 }

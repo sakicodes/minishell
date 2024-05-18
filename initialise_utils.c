@@ -2,8 +2,21 @@
 
 void	update_env(t_data *data, char **envp)
 {
-	data->environ = envp;
-	data->path = getpath(envp);
+	int	i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	data->environ = malloc(sizeof(char *) * (i + 1));
+	if (!data->environ)
+		exit_handler('m', NULL);
+	i = 0;
+	while (envp[i])
+	{
+		data->environ[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	data->environ[i] = NULL;
 }
 
 void	exit_handler(char c, char *cmd)

@@ -39,7 +39,8 @@ typedef struct s_cmd {
 }				t_cmd;
 
 typedef	struct s_file {
-	int	fd;
+	char	*filename;
+	int		fd;
 	struct s_file	*next;
 }				t_file;
 
