@@ -30,16 +30,34 @@
 # include <dirent.h>
 # include <sys/ioctl.h>
 # include <limits.h>
-//# include "pipex.h"
+
+typedef struct s_cmd {
+	char	*cmd;
+	char	*executable;
+	char	**cmdwithflags;
+	struct s_cmd	*next;
+}				t_cmd;
+
+typedef	struct s_file {
+	int	fd;
+	struct s_file	*next;
+}				t_file;
 
 typedef struct s_data {
 	char	curr_dir[1024];
 	char	*prompt;
 	char	*line;
 	char	**input;
-	int		num_of_inputs;
 	char	**environ;
+	char	*path;
+	t_cmd	*cmds;
+	t_file	*files;
 	int		death;
 }				t_data;
+
+void	update_env(t_data *data, char **envp);
+void	exit_handler(char c, char *cmd);
+char	*getpath(char **envp);
+char	*check_path(char **paths, char *cf);
 
 #endif

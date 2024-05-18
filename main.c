@@ -24,12 +24,11 @@ void	compare(t_data *data)
 int	initialise(t_data *data, char **envp)
 {
 	getcwd(data->curr_dir, 1024);
-	data->environ = envp;
+	update_env(data, envp);
 	data->prompt = ft_strjoin(data->curr_dir, "> \0");
 	if (!data->prompt)
 		return (1);
 	data->death = 0;
-	data->num_of_inputs = 0;
 	return (0);
 }
 
@@ -41,7 +40,7 @@ void	start(t_data *data)
 		if (ft_strlen(data->line) == 0)
 			continue ;
 		add_history(data->line);
-		compare(data);
+		// compare(data);
 		// parsing (split the line as necessary and save them to a char double ptr(char **input))
 		// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
 		// most prob will need to free the commands char double ptr 
