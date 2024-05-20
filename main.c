@@ -24,8 +24,10 @@ void	change_directory(t_data *data)
 			ptr = ft_strrchr(data->curr_dir, '/');
 			newpath = ft_substr(data->curr_dir, 0, ptr - data->curr_dir);
 			chdir(newpath);
-			getcwd(data->curr_dir, 1024);
 		}
+		else
+			chdir(data->cmds[0].cmdwithflags[1]);
+		getcwd(data->curr_dir, 1024);
 	}
 }
 
