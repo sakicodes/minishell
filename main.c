@@ -17,16 +17,28 @@ void	change_directory(t_data *data)
 	char	*ptr;
 	char	*newpath;
 
-	if (data->cmds->cmdwithflags[1])
+	// if (data->cmds->cmdwithflags[1])
+	// {
+	// 	if (ft_strncmp(data->cmds[0].cmdwithflags[1], "..\0", 2) == 0)
+	// 	{
+	// 		ptr = ft_strrchr(data->curr_dir, '/');
+	// 		newpath = ft_substr(data->curr_dir, 0, ptr - data->curr_dir);
+	// 		chdir(newpath);
+	// 	}
+	// 	else
+	// 		chdir(data->cmds[0].cmdwithflags[1]);
+	// 	getcwd(data->curr_dir, 1024);
+	// }
+	if (data->input[1])
 	{
-		if (ft_strncmp(data->cmds[0].cmdwithflags[1], "..\0", 2) == 0)
+		if (ft_strncmp(data->input[1], "..\0", 2) == 0)
 		{
 			ptr = ft_strrchr(data->curr_dir, '/');
 			newpath = ft_substr(data->curr_dir, 0, ptr - data->curr_dir);
 			chdir(newpath);
 		}
 		else
-			chdir(data->cmds[0].cmdwithflags[1]);
+			chdir(data->input[1]);
 		getcwd(data->curr_dir, 1024);
 	}
 }
@@ -46,8 +58,11 @@ int	compare(t_data *data)
 		printf("%s\n", data->curr_dir);
 		ret = 1;
 	}
-	// else if (ft_strncmp(data->line, "cd\0", 2) == 0)
-	// 	change_directory(data);
+	else if (ft_strncmp(data->line, "cd\0", 2) == 0)
+	{
+		change_directory(data);
+		ret = 1;
+	}
 	return (ret);
 }
 
@@ -55,21 +70,30 @@ int	initialise(t_data *data, char **envp)
 {
 	getcwd(data->curr_dir, 1024);
 	update_env(data, envp);
-	data->prompt = ft_strjoin(data->curr_dir, "> \0");
-	if (!data->prompt)
-		return (1);
 	data->death = 0;
 	return (0);
+}
+
+char	*get_prompt(char *curr_dir)
+{
+	char	*prompt;
+
+	prompt = ft_strjoin(curr_dir, "> \0");
+	if (!prompt)
+		return (NULL);
+	return (prompt);
 }
 
 void	start(t_data *data)
 {
 	while (data->death == 0)
 	{
+		data->prompt = get_prompt(data->curr_dir);
 		data->line = readline(data->prompt);
 		if (ft_strlen(data->line) == 0)
 			continue ;
 		add_history(data->line);
+		data->input = ft_split(data->line, ' ');
 		// parsing (split the line as necessary and save them to a char double ptr(char **input))
 		if (compare(data) == 0)
 		{
@@ -77,6 +101,7 @@ void	start(t_data *data)
 			// most prob will need to free the commands char double ptr 
 		}
 		free(data->line);
+		free(data->prompt);
 	}
 }
 
