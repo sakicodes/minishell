@@ -12,45 +12,28 @@
 
 #include "minishell.h"
 
-void	change_directory(t_data *data)
+void	env_print(t_env *environ)
 {
-	char	*ptr;
-	char	*newpath;
+	t_env	*current;
 
-	// if (data->cmds->cmdwithflags[1])
-	// {
-	// 	if (ft_strncmp(data->cmds[0].cmdwithflags[1], "..\0", 2) == 0)
-	// 	{
-	// 		ptr = ft_strrchr(data->curr_dir, '/');
-	// 		newpath = ft_substr(data->curr_dir, 0, ptr - data->curr_dir);
-	// 		chdir(newpath);
-	// 	}
-	// 	else
-	// 		chdir(data->cmds[0].cmdwithflags[1]);
-	// 	getcwd(data->curr_dir, 1024);
-	// }
-	if (data->input[1])
+	current = environ;
+	while (current)
 	{
-		if (ft_strncmp(data->input[1], "..\0", 2) == 0)
-		{
-			ptr = ft_strrchr(data->curr_dir, '/');
-			newpath = ft_substr(data->curr_dir, 0, ptr - data->curr_dir);
-			chdir(newpath);
-		}
-		else
-			chdir(data->input[1]);
-		getcwd(data->curr_dir, 1024);
+		printf("%s=%s\n", current->key, current->value);
+		current = current->next;
 	}
 }
 
 int	compare(t_data *data)
 {
 	int	ret;
+	t_env	*ptr;
 
 	ret = 0;
 	if (ft_strncmp(data->line, "exit\0", 4) == 0)
 	{
 		data->death = 1;
+		ret = 1;
 		printf("exit, goodbye!\n");
 	}
 	else if (ft_strncmp(data->line, "pwd\0", 3) == 0)
@@ -63,14 +46,26 @@ int	compare(t_data *data)
 		change_directory(data);
 		ret = 1;
 	}
+	else if (ft_strncmp(data->line, "env\0", 3) == 0)
+	{
+		env_print(data->environ);
+		ret = 1;
+	}
+	else if (ft_strncmp(data->line, "test\0", 4) == 0)
+	{
+		ptr = get_env(data->environ, "PWD\0");
+		printf("%s=%s\n", ptr->key, ptr->value);
+		ret = 1;
+	}
 	return (ret);
 }
 
 int	initialise(t_data *data, char **envp)
 {
 	getcwd(data->curr_dir, 1024);
-	update_env(data, envp);
+	data->environ = initialise_env(envp);
 	data->death = 0;
+	data->exit_status = 0;
 	return (0);
 }
 
@@ -100,8 +95,9 @@ void	start(t_data *data)
 			// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
 			// most prob will need to free the commands char double ptr 
 		}
-		free(data->line);
-		free(data->prompt);
+		free_ptr(data->line);
+		free_ptr(data->prompt);
+		free_dblptr((void **)data->input);
 	}
 }
 
@@ -121,6 +117,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	// signal handling
 	start(&data);
-	free(data.prompt);
-	return (0);
+	free_dblptr((void **)data.environ);
+	free_envnode(data.environ);
+	return (data.exit_status);
 }

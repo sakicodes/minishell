@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS = -lreadline
 
-SRCS = main.c initialise_utils.c
+SRCS = main.c initialise_utils.c environ_list.c environ_utils.c directory_builtin.c free.c
 OBJS = $(SRCS:.c=.o)
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a

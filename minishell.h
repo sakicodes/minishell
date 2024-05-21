@@ -44,21 +44,39 @@ typedef	struct s_file {
 	struct s_file	*next;
 }				t_file;
 
+typedef	struct	s_env {
+	char	*key;
+	char	*value;
+	struct s_env	*next;
+}				t_env;
+
 typedef struct s_data {
 	char	curr_dir[1024];
 	char	*prompt;
 	char	*line;
 	char	**input;
-	char	**environ;
-	char	*path;
 	t_cmd	*cmds;
 	t_file	*files;
+	t_env	*environ;
 	int		death;
+	unsigned int	exit_status;
 }				t_data;
 
-void	update_env(t_data *data, char **envp);
+// free functions add under
+void	free_ptr(void *ptr);
+void	free_dblptr(void **ptr);
+void	free_envnode(t_env *head);
+
+t_env	*initialise_env(char **envp);
 void	exit_handler(char c, char *cmd);
-char	*getpath(char **envp);
+
+// handling of environ
+t_env	*get_env(t_env *environ, char *var);
+int		get_env_index(t_env *environ, char *var);
+
+// builtins
+void	change_directory(t_data *data);
+
 char	*check_path(char **paths, char *cf);
 
 #endif

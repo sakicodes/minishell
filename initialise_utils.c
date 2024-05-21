@@ -1,24 +1,5 @@
 #include "minishell.h"
 
-void	update_env(t_data *data, char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-		i++;
-	data->environ = malloc(sizeof(char *) * (i + 1));
-	if (!data->environ)
-		exit_handler('m', NULL);
-	i = 0;
-	while (envp[i])
-	{
-		data->environ[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	data->environ[i] = NULL;
-}
-
 void	exit_handler(char c, char *cmd)
 {
 	if (c == 'o')
@@ -38,30 +19,6 @@ void	exit_handler(char c, char *cmd)
 		perror("\nAccess error");
 	}
 	exit(EXIT_FAILURE);
-}
-
-char	*getpath(char **envp)
-{
-	char	*path;
-	char	*cmp;
-	int		i;
-	int		j;
-
-	i = 0;
-	path = NULL;
-	cmp = "PATH=\0";
-	while (envp[i])
-	{
-		j = 0;
-		while (*envp[i]++ == cmp[j])
-		{
-			if (cmp[j + 1] == '\0')
-				path = ft_strdup(envp[i]);
-			j++;
-		}
-		i++;
-	}
-	return (path);
 }
 
 char	*check_path(char **paths, char *cf)
