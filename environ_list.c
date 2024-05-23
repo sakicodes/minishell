@@ -35,15 +35,30 @@ t_env	*new_environ(char *str)
 	return (env);
 }
 
+void	add_env_back(t_env **environ, t_env *new)
+{
+	t_env	*last;
+
+	if (!new)
+		return ;
+	if (!*environ)
+		*environ = new;
+	else
+	{
+		last = *environ;
+		while (last->next != NULL)
+			last = last->next;
+		last->next = new;
+	}
+}
+
 t_env	*initialise_env(char **envp)
 {
 	int	i;
 	t_env	*head;
-	t_env	*current;
 	t_env	*new;
 
 	head = NULL;
-	current = NULL;
 	new = NULL;
 	i = 0;
 	while (envp[i])
@@ -54,16 +69,7 @@ t_env	*initialise_env(char **envp)
 			free_envnode(head);
 			exit_handler('m', NULL);
 		}
-		if (head == NULL)
-		{
-			head = new;
-			current = new;
-		}
-		else
-		{
-			current->next = new;
-			current = new;
-		}
+		add_env_back(&head, new);
 		i++;
 	}
 	return (head);

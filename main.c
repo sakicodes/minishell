@@ -28,6 +28,7 @@ int	compare(t_data *data)
 {
 	int	ret;
 	t_env	*ptr;
+	t_env	*new;
 
 	ret = 0;
 	if (ft_strncmp(data->line, "exit\0", 4) == 0)
@@ -53,7 +54,9 @@ int	compare(t_data *data)
 	}
 	else if (ft_strncmp(data->line, "test\0", 4) == 0)
 	{
-		ptr = get_env(data->environ, "PWD\0");
+		new = new_environ("TEST=1234567890abcdef\0");
+		add_env_back(&data->environ, new);
+		ptr = get_env(data->environ, "TEST\0");
 		printf("%s=%s\n", ptr->key, ptr->value);
 		ret = 1;
 	}
@@ -117,7 +120,6 @@ int main(int argc, char **argv, char **envp)
 	}
 	// signal handling
 	start(&data);
-	free_dblptr((void **)data.environ);
 	free_envnode(data.environ);
 	return (data.exit_status);
 }

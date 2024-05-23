@@ -67,12 +67,13 @@ void	free_ptr(void *ptr);
 void	free_dblptr(void **ptr);
 void	free_envnode(t_env *head);
 
+// handling of environ
+t_env	*new_environ(char *str);
 t_env	*initialise_env(char **envp);
 void	exit_handler(char c, char *cmd);
-
-// handling of environ
 t_env	*get_env(t_env *environ, char *var);
 int		get_env_index(t_env *environ, char *var);
+void	add_env_back(t_env **environ, t_env *new);
 
 // builtins
 void	change_directory(t_data *data);

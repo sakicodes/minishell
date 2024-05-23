@@ -52,5 +52,11 @@ void	change_directory(t_data *data)
 		ptr = get_env(data->environ, "HOME\0");
 		chdir(ptr->value);
 	}
+	ptr = get_env(data->environ, "OLDPWD\0");
+	free(ptr->value);
+	ptr->value = ft_strdup(data->curr_dir);
+	ptr = get_env(data->environ, "PWD\0");
+	free(ptr->value);
 	getcwd(data->curr_dir, 1024);
+	ptr->value = ft_strdup(data->curr_dir);
 }
