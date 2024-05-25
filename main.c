@@ -34,6 +34,7 @@ int	compare(t_data *data)
 	if (ft_strncmp(data->line, "exit\0", 4) == 0)
 	{
 		data->death = 1;
+		data->exit_status = exit_program(data);
 		ret = 1;
 		printf("exit, goodbye!\n");
 	}

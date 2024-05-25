@@ -77,6 +77,7 @@ void	add_env_back(t_env **environ, t_env *new);
 
 // builtins
 void	change_directory(t_data *data);
+int 	exit_program(t_data *data);
 
 char	*check_path(char **paths, char *cf);
 
