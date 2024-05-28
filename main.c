@@ -53,6 +53,11 @@ int	compare(t_data *data)
 		env_print(data->environ);
 		ret = 1;
 	}
+	else if (ft_strncmp(data->line, "echo\0", 4) == 0)
+	{
+		echo(data);
+		ret = 1;
+	}
 	else if (ft_strncmp(data->line, "test\0", 4) == 0)
 	{
 		new = new_environ("TEST=1234567890abcdef\0");

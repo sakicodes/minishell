@@ -55,6 +55,7 @@ typedef struct s_data {
 	char	*prompt;
 	char	*line;
 	char	**input;
+	char	**env;
 	t_cmd	*cmds;
 	t_file	*files;
 	t_env	*environ;
@@ -78,6 +79,7 @@ void	add_env_back(t_env **environ, t_env *new);
 // builtins
 void	change_directory(t_data *data);
 int 	exit_program(t_data *data);
+void	echo(t_data *data);
 
 char	*check_path(char **paths, char *cf);
 
