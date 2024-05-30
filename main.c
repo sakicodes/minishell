@@ -19,7 +19,8 @@ void	env_print(t_env *environ)
 	current = environ;
 	while (current)
 	{
-		printf("%s=%s\n", current->key, current->value);
+		if (current->value != NULL)
+			printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
 }
@@ -57,6 +58,9 @@ int	compare(t_data *data)
 	{
 		echo(data);
 		ret = 1;
+	}else if (ft_strncmp(data->line, "export\0", 6) == 0)
+	{
+		ret = export(data);
 	}
 	else if (ft_strncmp(data->line, "test\0", 4) == 0)
 	{

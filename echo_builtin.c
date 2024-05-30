@@ -3,17 +3,25 @@
 void    echo(t_data *data)
 {
     int i;
+    int newline;
 
     i = 1;
-    if (ft_strncmp(data->input[1], "-n\0", 2) == 0)
-        i++;
-    while (data->input[i])
+    newline = 0;
+    if (data->input[i])
     {
-        printf("%s", data->input[i]);
-        i++;
-        if (data->input[i] != NULL)
-            printf(" ");
+        if (ft_strncmp(data->input[i], "-n\0", 2) == 0)
+        {
+            i++;
+            newline = 1;
+        }
+        while (data->input[i])
+        {
+            printf("%s", data->input[i]);
+            i++;
+            if (data->input[i] != NULL)
+                printf(" ");
+        }
     }
-    if (ft_strncmp(data->input[1], "-n\0", 2) != 0)
+    if (newline == 0)
             printf("\n");
 }

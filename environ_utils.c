@@ -43,7 +43,58 @@ t_env	*get_env(t_env *environ, char *var)
 	return (NULL);
 }
 
-// int	change_env_var(t_data *data, char *var)
-// {
+int get_env_size(t_env *head)
+{
+    int count;
+    t_env   *current;
 
-// }
+    count = 0;
+    current = head;
+    while (current)
+    {
+        count++;
+        current = current->next;
+    }
+    return (count);
+}
+
+char	*env_to_str(t_env *current)
+{
+	char	*str;
+	char	*temp;
+
+	str = ft_strdup(current->key);
+	if (current->value)
+	{
+		temp = ft_strjoin(str, "=\0");
+		free_ptr(str);
+		str = ft_strjoin(temp, current->value);
+		free_ptr(temp);
+	}
+	return (str);
+}
+
+char    **get_env_to_str(t_env *environ)
+{
+    int objs;
+    char    **array;
+    t_env   *current;
+    int i;
+
+    if (environ == NULL)
+        return (NULL);
+    objs = get_env_size(environ);
+    array = malloc(sizeof(char *) * (objs + 1));
+    if (!array)
+        return (NULL);
+    current = environ;
+    i = 0;
+    while (current)
+    {
+        array[i] = env_to_str(current);
+        i++;
+        current = current->next;
+    }
+    array[i] = NULL;
+    return (NULL);
+}
