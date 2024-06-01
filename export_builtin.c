@@ -52,6 +52,7 @@ void	export_print(t_env *environ)
 			printf("declare -x %s\n", env_str[i]);
 		i++;
 	}
+	free_dblptr((void **)env_str);
 }
 
 int	export(t_data *data)
