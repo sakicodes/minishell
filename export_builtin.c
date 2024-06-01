@@ -14,8 +14,8 @@
 
 void	sort_env(char **env, int size)
 {
-	int	i;
-	int	sorted;
+	int		i;
+	int		sorted;
 	char	*temp;
 
 	sorted = 0;
@@ -48,7 +48,8 @@ void	export_print(t_env *environ)
 	i = 0;
 	while (env_str[i])
 	{
-		printf("declare -x %s\n", env_str[i]);
+		if (ft_strncmp(env_str[i], "_=\0", 2) != 0)
+			printf("declare -x %s\n", env_str[i]);
 		i++;
 	}
 }

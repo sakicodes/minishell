@@ -58,7 +58,8 @@ int	compare(t_data *data)
 	{
 		echo(data);
 		ret = 1;
-	}else if (ft_strncmp(data->line, "export\0", 6) == 0)
+	}
+	else if (ft_strncmp(data->line, "export\0", 6) == 0)
 	{
 		ret = export(data);
 	}
