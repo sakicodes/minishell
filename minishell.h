@@ -32,34 +32,34 @@
 # include <limits.h>
 
 typedef struct s_cmd {
-	char	*cmd;
-	char	*executable;
-	char	**cmdwithflags;
+	char			*cmd;
+	char			*executable;
+	char			**cmdwithflags;
 	struct s_cmd	*next;
 }				t_cmd;
 
-typedef	struct s_file {
-	char	*filename;
-	int		fd;
+typedef struct s_file {
+	char			*filename;
+	int				fd;
 	struct s_file	*next;
 }				t_file;
 
-typedef	struct	s_env {
-	char	*key;
-	char	*value;
+typedef struct s_env {
+	char			*key;
+	char			*value;
 	struct s_env	*next;
 }				t_env;
 
 typedef struct s_data {
-	char	curr_dir[1024];
-	char	*prompt;
-	char	*line;
-	char	**input;
-	char	**env;
-	t_cmd	*cmds;
-	t_file	*files;
-	t_env	*environ;
-	int		death;
+	char			curr_dir[1024];
+	char			*prompt;
+	char			*line;
+	char			**input;
+	char			**env;
+	t_cmd			*cmds;
+	t_file			*files;
+	t_env			*environ;
+	int				death;
 	unsigned int	exit_status;
 }				t_data;
 
@@ -75,14 +75,14 @@ void	exit_handler(char c, char *cmd);
 t_env	*get_env(t_env *environ, char *var);
 int		get_env_index(t_env *environ, char *var);
 void	add_env_back(t_env **environ, t_env *new);
-int 	get_env_size(t_env *head);
-char    **get_env_to_str(t_env *environ);
+int		get_env_size(t_env *head);
+char	**get_env_to_str(t_env *environ, int type);
 
 // builtins
 void	change_directory(t_data *data);
-int 	exit_program(t_data *data);
+int		exit_program(t_data *data);
 void	echo(t_data *data);
-int 	export(t_data *data);
+int		export(t_data *data);
 
 char	*check_path(char **paths, char *cf);
 

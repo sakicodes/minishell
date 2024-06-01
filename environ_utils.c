@@ -14,7 +14,7 @@
 
 int	get_env_index(t_env *environ, char *var)
 {
-	int	i;
+	int		i;
 	t_env	*current;
 
 	i = 0;
@@ -31,7 +31,7 @@ int	get_env_index(t_env *environ, char *var)
 
 t_env	*get_env(t_env *environ, char *var)
 {
-	t_env *current;
+	t_env	*current;
 
 	current = environ;
 	while (current)
@@ -43,22 +43,22 @@ t_env	*get_env(t_env *environ, char *var)
 	return (NULL);
 }
 
-int get_env_size(t_env *head)
+int	get_env_size(t_env *head)
 {
-    int count;
-    t_env   *current;
+	int		count;
+	t_env	*current;
 
-    count = 0;
-    current = head;
-    while (current)
-    {
-        count++;
-        current = current->next;
-    }
-    return (count);
+	count = 0;
+	current = head;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
 }
 
-char	*env_to_str(t_env *current)
+char	*env_to_str(t_env *current, int type)
 {
 	char	*str;
 	char	*temp;
@@ -66,35 +66,45 @@ char	*env_to_str(t_env *current)
 	str = ft_strdup(current->key);
 	if (current->value)
 	{
-		temp = ft_strjoin(str, "=\0");
+		if (type == 1)
+			temp = ft_strjoin(str, "=\"\0");
+		else
+			temp = ft_strjoin(str, "=\0");
 		free_ptr(str);
 		str = ft_strjoin(temp, current->value);
 		free_ptr(temp);
+		if (type == 1)
+		{
+			temp = ft_strjoin(str, "\"\0");
+			free_ptr(str);
+			str = ft_strdup(temp);
+			free_ptr(temp);
+		}
 	}
 	return (str);
 }
 
-char    **get_env_to_str(t_env *environ)
+char	**get_env_to_str(t_env *environ, int type)
 {
-    int objs;
-    char    **array;
-    t_env   *current;
-    int i;
+	int		objs;
+	char	**array;
+	t_env	*current;
+	int		i;
 
-    if (environ == NULL)
-        return (NULL);
-    objs = get_env_size(environ);
-    array = malloc(sizeof(char *) * (objs + 1));
-    if (!array)
-        return (NULL);
-    current = environ;
-    i = 0;
-    while (current)
-    {
-        array[i] = env_to_str(current);
-        i++;
-        current = current->next;
-    }
-    array[i] = NULL;
-    return (NULL);
+	if (environ == NULL)
+		return (NULL);
+	objs = get_env_size(environ);
+	array = malloc(sizeof(char *) * (objs + 1));
+	if (!array)
+		return (NULL);
+	current = environ;
+	i = 0;
+	while (current)
+	{
+		array[i] = env_to_str(current, type);
+		i++;
+		current = current->next;
+	}
+	array[i] = NULL;
+	return (array);
 }

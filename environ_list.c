@@ -54,7 +54,7 @@ void	add_env_back(t_env **environ, t_env *new)
 
 t_env	*initialise_env(char **envp)
 {
-	int	i;
+	int		i;
 	t_env	*head;
 	t_env	*new;
 
