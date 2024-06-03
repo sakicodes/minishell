@@ -75,6 +75,7 @@ void	exit_handler(char c, char *cmd);
 t_env	*get_env(t_env *environ, char *var);
 int		get_env_index(t_env *environ, char *var);
 void	add_env_back(t_env **environ, t_env *new);
+void	remove_env(t_env **environ, t_env *del);
 int		get_env_size(t_env *head);
 char	**get_env_to_str(t_env *environ, int type);
 
@@ -83,6 +84,7 @@ void	change_directory(t_data *data);
 int		exit_program(t_data *data);
 void	echo(t_data *data);
 int		export(t_data *data);
+int	unset(t_data *data);
 
 char	*check_path(char **paths, char *cf);
 

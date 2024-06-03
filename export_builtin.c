@@ -57,7 +57,39 @@ void	export_print(t_env *environ)
 
 int	export(t_data *data)
 {
+	t_env	*ptr;
+	char	**split;
+	int	i;
+
+	ptr = NULL;
 	if (data->input[1] == NULL)
 		export_print(data->environ);
+	else
+	{
+		i = 1;
+		while (data->input[i])
+		{
+			split = ft_split(data->input[i], '=');
+			if (!split[0] && data->input[i][0] == '=')
+			{
+				printf("export: '=': not a valid identifier.\n");
+				data->exit_status = 1;
+				break ;
+			}
+			ptr = get_env(data->environ, split[0]);
+			if (ptr == NULL)
+			{
+				ptr = new_environ(data->input[i]);
+				add_env_back(&data->environ, ptr);
+			}
+			else
+			{
+				free_ptr(ptr->value);
+				ptr->value = ft_strdup(split[1]);
+			}
+			free_dblptr((void **)split);
+			i++;
+		}
+	}
 	return (1);
 }

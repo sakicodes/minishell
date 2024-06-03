@@ -52,6 +52,29 @@ void	add_env_back(t_env **environ, t_env *new)
 	}
 }
 
+void	remove_env(t_env **environ, t_env *del)
+{
+	t_env	*before;
+	//t_env	*after;
+
+	if (!environ || !*environ || !del)
+		return ;
+	if (*environ == del)
+		*environ = (*environ)->next;
+	else
+	{
+		before = *environ;
+		while (before && before->next != del)
+			before = before->next;
+		//after = del->next;
+		before->next = del->next;
+	}
+	free_ptr(del->key);
+	free_ptr(del->value);
+	del->next = NULL;
+	free_ptr(del);
+}
+
 t_env	*initialise_env(char **envp)
 {
 	int		i;

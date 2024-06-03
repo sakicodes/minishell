@@ -63,6 +63,10 @@ int	compare(t_data *data)
 	{
 		ret = export(data);
 	}
+	else if (ft_strncmp(data->line, "unset\0", 5) == 0)
+	{
+		ret = unset(data);
+	}
 	else if (ft_strncmp(data->line, "test\0", 4) == 0)
 	{
 		new = new_environ("TEST=1234567890abcdef\0");
