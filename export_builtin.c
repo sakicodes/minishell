@@ -103,8 +103,7 @@ int	export(t_data *data)
 				else
 				{
 					free_ptr(ptr->value);
-					if (split[1])
-						ptr->value = ft_strdup(split[1]);
+					ptr->value = ft_strdup((ft_strchr(data->input[i], '=') + 1));
 				}
 				free_dblptr((void **)split);
 			}
