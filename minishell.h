@@ -68,6 +68,9 @@ void	free_ptr(void *ptr);
 void	free_dblptr(void **ptr);
 void	free_envnode(t_env *head);
 
+// initialise
+void	increase_shell_level(t_env *environ);
+
 // handling of environ
 t_env	*new_environ(char *str);
 t_env	*initialise_env(char **envp);
@@ -84,7 +87,7 @@ void	change_directory(t_data *data);
 int		exit_program(t_data *data);
 void	echo(t_data *data);
 int		export(t_data *data);
-int	unset(t_data *data);
+int		unset(t_data *data);
 
 char	*check_path(char **paths, char *cf);
 

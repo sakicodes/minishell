@@ -16,6 +16,7 @@ void	free_ptr(void *ptr)
 {
 	if (ptr)
 		free(ptr);
+	ptr = NULL;
 }
 
 void	free_dblptr(void **ptr)
@@ -31,6 +32,7 @@ void	free_dblptr(void **ptr)
 			i++;
 		}
 		free(ptr);
+		ptr = NULL;
 	}
 }
 

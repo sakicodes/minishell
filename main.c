@@ -28,52 +28,53 @@ void	env_print(t_env *environ)
 int	compare(t_data *data)
 {
 	int	ret;
-	t_env	*ptr;
-	t_env	*new;
+	char	*cmd;
+	int	len;
 
 	ret = 0;
-	if (ft_strncmp(data->line, "exit\0", 4) == 0)
+	cmd = data->input[0];
+	len = ft_strlen(cmd);
+	if (ft_strncmp(cmd, "exit\0", len) == 0)
 	{
 		data->death = 1;
 		data->exit_status = exit_program(data);
 		ret = 1;
 		printf("exit, goodbye!\n");
 	}
-	else if (ft_strncmp(data->line, "pwd\0", 3) == 0)
+	else if (ft_strncmp(cmd, "pwd\0", len) == 0)
 	{
 		printf("%s\n", data->curr_dir);
 		ret = 1;
 	}
-	else if (ft_strncmp(data->line, "cd\0", 2) == 0)
+	else if (ft_strncmp(cmd, "cd\0", len) == 0)
 	{
 		change_directory(data);
 		ret = 1;
 	}
-	else if (ft_strncmp(data->line, "env\0", 3) == 0)
+	else if (ft_strncmp(cmd, "env\0", len) == 0)
 	{
 		env_print(data->environ);
+		data->exit_status = 0;
 		ret = 1;
 	}
-	else if (ft_strncmp(data->line, "echo\0", 4) == 0)
+	else if (ft_strncmp(cmd, "echo\0", len) == 0)
 	{
 		echo(data);
 		ret = 1;
 	}
-	else if (ft_strncmp(data->line, "export\0", 6) == 0)
-	{
+	else if (ft_strncmp(cmd, "export\0", len) == 0)
 		ret = export(data);
-	}
-	else if (ft_strncmp(data->line, "unset\0", 5) == 0)
-	{
+	else if (ft_strncmp(cmd, "unset\0", len) == 0)
 		ret = unset(data);
-	}
-	else if (ft_strncmp(data->line, "test\0", 4) == 0)
+	else if (ft_strncmp(data->line, "test $?\0", 7) == 0)
 	{
-		new = new_environ("TEST=1234567890abcdef\0");
-		add_env_back(&data->environ, new);
-		ptr = get_env(data->environ, "TEST\0");
-		printf("%s=%s\n", ptr->key, ptr->value);
 		ret = 1;
+		printf("%d\n", data->exit_status);
+	}
+	else if (ft_strncmp(data->line, "test blah\0", 9) == 0)
+	{
+		ret = 1;
+		printf("%s\n", data->line);
 	}
 	return (ret);
 }
@@ -84,6 +85,7 @@ int	initialise(t_data *data, char **envp)
 	data->environ = initialise_env(envp);
 	data->death = 0;
 	data->exit_status = 0;
+	increase_shell_level(data->environ);
 	return (0);
 }
 

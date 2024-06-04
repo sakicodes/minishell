@@ -15,8 +15,8 @@
 void	change_directory(t_data *data)
 {
 	t_env	*ptr;
-	char	*pathptr;
-	char	*newpath;
+	// char	*pathptr;
+	// char	*newpath;
 
 	// if (data->cmds->cmdwithflags[1])
 	// {
@@ -37,20 +37,22 @@ void	change_directory(t_data *data)
 	// getcwd(data->curr_dir, 1024);
 	if (data->input[1])
 	{
-		if (ft_strncmp(data->input[1], "..\0", 2) == 0)
+		if (chdir(data->input[1]) != 0)
 		{
-			pathptr = ft_strrchr(data->curr_dir, '/');
-			newpath = ft_substr(data->curr_dir, 0, pathptr - data->curr_dir);
-			chdir(newpath);
-			free(newpath);
+			perror("cd");
+			data->exit_status = 1;
+			return ;
 		}
-		else
-			chdir(data->input[1]);
 	}
 	else
 	{
 		ptr = get_env(data->environ, "HOME\0");
-		chdir(ptr->value);
+		if (chdir(ptr->value) != 0)
+		{
+			perror("cd");
+			data->exit_status = 1;
+			return ;
+		}
 	}
 	ptr = get_env(data->environ, "OLDPWD\0");
 	free(ptr->value);
@@ -59,4 +61,5 @@ void	change_directory(t_data *data)
 	free(ptr->value);
 	getcwd(data->curr_dir, 1024);
 	ptr->value = ft_strdup(data->curr_dir);
+	data->exit_status = 0;
 }

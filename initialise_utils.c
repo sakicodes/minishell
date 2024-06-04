@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+void	increase_shell_level(t_env *environ)
+{
+	t_env	*shlvl;
+	int	level;
+
+	shlvl = get_env(environ, "SHLVL\0");
+	level = ft_atoi(shlvl->value);
+	free(shlvl->value);
+	level++;
+	shlvl->value = ft_itoa(level);
+}
+
 void	exit_handler(char c, char *cmd)
 {
 	if (c == 'o')

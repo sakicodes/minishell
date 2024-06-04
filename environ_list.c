@@ -55,7 +55,6 @@ void	add_env_back(t_env **environ, t_env *new)
 void	remove_env(t_env **environ, t_env *del)
 {
 	t_env	*before;
-	//t_env	*after;
 
 	if (!environ || !*environ || !del)
 		return ;
@@ -66,7 +65,6 @@ void	remove_env(t_env **environ, t_env *del)
 		before = *environ;
 		while (before && before->next != del)
 			before = before->next;
-		//after = del->next;
 		before->next = del->next;
 	}
 	free_ptr(del->key);

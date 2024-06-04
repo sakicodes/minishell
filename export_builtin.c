@@ -55,6 +55,22 @@ void	export_print(t_env *environ)
 	free_dblptr((void **)env_str);
 }
 
+int	valid_export_input(char *str)
+{
+	char	*equal_ptr;
+
+	if (ft_isalpha(str[0]) == 0)
+		return (1);
+	equal_ptr = ft_strchr(str, '=');
+	while (str < equal_ptr)
+	{
+		if (ft_isalnum(*str) == 0)
+			return (1);
+		str++;
+	}
+	return (0);
+}
+
 int	export(t_data *data)
 {
 	t_env	*ptr;
@@ -62,6 +78,7 @@ int	export(t_data *data)
 	int	i;
 
 	ptr = NULL;
+	data->exit_status = 0;
 	if (data->input[1] == NULL)
 		export_print(data->environ);
 	else
@@ -69,25 +86,28 @@ int	export(t_data *data)
 		i = 1;
 		while (data->input[i])
 		{
-			split = ft_split(data->input[i], '=');
-			if (!split[0] && data->input[i][0] == '=')
+			if (valid_export_input(data->input[i]) == 1)
 			{
-				printf("export: '=': not a valid identifier.\n");
+				printf("export: '%s': not a valid identifier.\n", data->input[i]);
 				data->exit_status = 1;
-				break ;
-			}
-			ptr = get_env(data->environ, split[0]);
-			if (ptr == NULL)
-			{
-				ptr = new_environ(data->input[i]);
-				add_env_back(&data->environ, ptr);
 			}
 			else
 			{
-				free_ptr(ptr->value);
-				ptr->value = ft_strdup(split[1]);
+				split = ft_split(data->input[i], '=');
+				ptr = get_env(data->environ, split[0]);
+				if (ptr == NULL)
+				{
+					ptr = new_environ(data->input[i]);
+					add_env_back(&data->environ, ptr);
+				}
+				else
+				{
+					free_ptr(ptr->value);
+					if (split[1])
+						ptr->value = ft_strdup(split[1]);
+				}
+				free_dblptr((void **)split);
 			}
-			free_dblptr((void **)split);
 			i++;
 		}
 	}

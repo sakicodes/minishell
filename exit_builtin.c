@@ -16,8 +16,12 @@ int	exit_program(t_data *data)
 {
 	int	exit_number;
 
-	exit_number = 0;
+	exit_number = data->exit_status;
 	if (data->input[1])
+	{
 		exit_number = ft_atoi(data->input[1]);
+		if (exit_number < 0 || exit_number > 255)
+			exit_number = exit_number % 256;
+	}
 	return (exit_number);
 }

@@ -36,4 +36,5 @@ void	echo(t_data *data)
 	}
 	if (newline == 0)
 		printf("\n");
+	data->exit_status = 0;
 }
