@@ -117,14 +117,14 @@ void	open_subprocess(t_cmd *command, t_env *environ, unsigned int *exit_status)
 			free_dblptr((void **)envp);
 			exit_handler('e', NULL);
 		}
+	}
+	else
+	{
+		waitpid(process, &status, 0);
+		if (WIFEXITED(status))
+			*exit_status = WEXITSTATUS(status);
 		else
-		{
-			waitpid(process, &status, 0);
-			if (WIFEXITED(status))
-				*exit_status = WEXITSTATUS(status);
-			else
-				*exit_status = 1;
-		}
+			*exit_status = 1;
 	}
 }
 
@@ -138,7 +138,6 @@ void	start(t_data *data)
 			continue ;
 		add_history(data->line);
 		data->cmds = new_command(data->line, data->environ);
-		printf("cmd: %s\nexecutable: %s\n", data->cmds->cmd, data->cmds->executable);
 		// parsing (split the line as necessary and save them to a char double ptr(char **input))
 		// if (compare(data) == 0) builtins done
 		// {
@@ -146,6 +145,7 @@ void	start(t_data *data)
 		// 	// most prob will need to free the commands char double ptr 
 		// }
 		open_subprocess(data->cmds, data->environ, &data->exit_status);
+		printf("exit status: %d\n", data->exit_status);
 		free_ptr(data->line);
 		free_ptr(data->prompt);
 		//free_dblptr((void **)data->input);
