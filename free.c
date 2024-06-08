@@ -49,3 +49,18 @@ void	free_envnode(t_env *head)
 		free(temp);
 	}
 }
+
+void	free_cmd(t_cmd *head)
+{
+	t_cmd	*temp;
+
+	while (head)
+	{
+		temp = head;
+		head = head->next;
+		free_ptr(temp->cmd);
+		free_ptr(temp->executable);
+		free_dblptr((void **)temp->cmdwithflags);
+		free(temp);
+	}
+}

@@ -75,7 +75,7 @@ int	export(t_data *data)
 {
 	t_env	*ptr;
 	char	**split;
-	int	i;
+	int		i;
 
 	ptr = NULL;
 	data->exit_status = 0;

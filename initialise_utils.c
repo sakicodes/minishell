@@ -15,7 +15,7 @@
 void	increase_shell_level(t_env *environ)
 {
 	t_env	*shlvl;
-	int	level;
+	int		level;
 
 	shlvl = get_env(environ, "SHLVL\0");
 	level = ft_atoi(shlvl->value);

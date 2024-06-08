@@ -99,6 +99,35 @@ char	*get_prompt(char *curr_dir)
 	return (prompt);
 }
 
+void	open_subprocess(t_cmd *command, t_env *environ, unsigned int *exit_status)
+{
+	char	**envp;
+	pid_t	process;
+	int	status;
+
+	status = 0;
+	process = fork();
+	if (process == -1)
+		exit_handler('f', NULL);
+	if (process == 0)
+	{
+		envp = get_env_to_str(environ, 0);
+		if (execve(command->executable, command->cmdwithflags, envp) == -1)
+		{
+			free_dblptr((void **)envp);
+			exit_handler('e', NULL);
+		}
+		else
+		{
+			waitpid(process, &status, 0);
+			if (WIFEXITED(status))
+				*exit_status = WEXITSTATUS(status);
+			else
+				*exit_status = 1;
+		}
+	}
+}
+
 void	start(t_data *data)
 {
 	while (data->death == 0)
@@ -108,16 +137,19 @@ void	start(t_data *data)
 		if (ft_strlen(data->line) == 0)
 			continue ;
 		add_history(data->line);
-		data->input = ft_split(data->line, ' ');
+		data->cmds = new_command(data->line, data->environ);
+		printf("cmd: %s\nexecutable: %s\n", data->cmds->cmd, data->cmds->executable);
 		// parsing (split the line as necessary and save them to a char double ptr(char **input))
-		if (compare(data) == 0)
-		{
-			// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
-			// most prob will need to free the commands char double ptr 
-		}
+		// if (compare(data) == 0) builtins done
+		// {
+		// 	// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
+		// 	// most prob will need to free the commands char double ptr 
+		// }
+		open_subprocess(data->cmds, data->environ, &data->exit_status);
 		free_ptr(data->line);
 		free_ptr(data->prompt);
-		free_dblptr((void **)data->input);
+		//free_dblptr((void **)data->input);
+		free_cmd(data->cmds);
 	}
 }
 

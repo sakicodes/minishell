@@ -67,9 +67,12 @@ typedef struct s_data {
 void	free_ptr(void *ptr);
 void	free_dblptr(void **ptr);
 void	free_envnode(t_env *head);
+void	free_cmd(t_cmd *head);
 
 // initialise
 void	increase_shell_level(t_env *environ);
+char	*find_executable(char *cmd, t_env *environ);
+t_cmd	*new_command(char *line, t_env *environ);
 
 // handling of environ
 t_env	*new_environ(char *str);
