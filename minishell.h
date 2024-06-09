@@ -86,11 +86,12 @@ int		get_env_size(t_env *head);
 char	**get_env_to_str(t_env *environ, int type);
 
 // builtins
-void	change_directory(t_data *data);
-int		exit_program(t_data *data);
-void	echo(t_data *data);
-int		export(t_data *data);
-int		unset(t_data *data);
+int		env_print(t_env *environ);
+int		change_directory(t_cmd *cmd, t_data *data);
+int		exit_program(unsigned int *exit_status, t_cmd *cmd);
+int		echo(t_cmd *cmd, t_data *data);
+int		export(t_cmd *cmd, t_data *data);
+int		unset(t_cmd *cmd, t_data *data);
 
 char	*check_path(char **paths, char *cf);
 

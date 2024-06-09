@@ -71,7 +71,7 @@ int	valid_export_input(char *str)
 	return (0);
 }
 
-int	export(t_data *data)
+int	export(t_cmd *cmd, t_data *data)
 {
 	t_env	*ptr;
 	char	**split;
@@ -79,31 +79,31 @@ int	export(t_data *data)
 
 	ptr = NULL;
 	data->exit_status = 0;
-	if (data->input[1] == NULL)
+	if (cmd->cmdwithflags[1] == NULL)
 		export_print(data->environ);
 	else
 	{
 		i = 1;
-		while (data->input[i])
+		while (cmd->cmdwithflags[i])
 		{
-			if (valid_export_input(data->input[i]) == 1)
+			if (valid_export_input(cmd->cmdwithflags[i]) == 1)
 			{
-				printf("export: '%s': not a valid identifier.\n", data->input[i]);
+				printf("export: '%s': not a valid identifier.\n", cmd->cmdwithflags[i]);
 				data->exit_status = 1;
 			}
 			else
 			{
-				split = ft_split(data->input[i], '=');
+				split = ft_split(cmd->cmdwithflags[i], '=');
 				ptr = get_env(data->environ, split[0]);
 				if (ptr == NULL)
 				{
-					ptr = new_environ(data->input[i]);
+					ptr = new_environ(cmd->cmdwithflags[i]);
 					add_env_back(&data->environ, ptr);
 				}
 				else
 				{
 					free_ptr(ptr->value);
-					ptr->value = ft_strdup((ft_strchr(data->input[i], '=') + 1));
+					ptr->value = ft_strdup((ft_strchr(cmd->cmdwithflags[i], '=') + 1));
 				}
 				free_dblptr((void **)split);
 			}

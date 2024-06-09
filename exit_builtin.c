@@ -12,16 +12,17 @@
 
 #include "minishell.h"
 
-int	exit_program(t_data *data)
+int	exit_program(unsigned int *exit_status, t_cmd *cmd)
 {
-	int	exit_number;
+	unsigned int	exit_number;
 
-	exit_number = data->exit_status;
-	if (data->input[1])
+	exit_number = *exit_status;
+	if (cmd->cmdwithflags[1])
 	{
-		exit_number = ft_atoi(data->input[1]);
-		if (exit_number < 0 || exit_number > 255)
+		exit_number = ft_atoi(cmd->cmdwithflags[1]);
+		if (exit_number > 255)
 			exit_number = exit_number % 256;
 	}
-	return (exit_number);
+	*exit_status = exit_number;
+	return (1);
 }

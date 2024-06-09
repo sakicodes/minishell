@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	change_directory(t_data *data)
+int	change_directory(t_cmd *cmd, t_data *data)
 {
 	t_env	*ptr;
 	// char	*pathptr;
@@ -35,13 +35,13 @@ void	change_directory(t_data *data)
 	// 	chdir(ptr);
 	// }
 	// getcwd(data->curr_dir, 1024);
-	if (data->input[1])
+	if (cmd->cmdwithflags[1])
 	{
-		if (chdir(data->input[1]) != 0)
+		if (chdir(cmd->cmdwithflags[1]) != 0)
 		{
 			perror("cd");
 			data->exit_status = 1;
-			return ;
+			return (1);
 		}
 	}
 	else
@@ -51,7 +51,7 @@ void	change_directory(t_data *data)
 		{
 			perror("cd");
 			data->exit_status = 1;
-			return ;
+			return (1);
 		}
 	}
 	ptr = get_env(data->environ, "OLDPWD\0");
@@ -62,4 +62,5 @@ void	change_directory(t_data *data)
 	getcwd(data->curr_dir, 1024);
 	ptr->value = ft_strdup(data->curr_dir);
 	data->exit_status = 0;
+	return (1);
 }

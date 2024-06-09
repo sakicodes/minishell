@@ -12,18 +12,18 @@
 
 #include "minishell.h"
 
-int	unset(t_data *data)
+int	unset(t_cmd *cmd, t_data *data)
 {
 	t_env	*ptr;
 	int		i;
 
 	data->exit_status = 0;
-	if (!data->input[1])
+	if (!cmd->cmdwithflags[1])
 		return (1);
 	i = 1;
-	while (data->input[i])
+	while (cmd->cmdwithflags[i])
 	{
-		ptr = get_env(data->environ, data->input[i]);
+		ptr = get_env(data->environ, cmd->cmdwithflags[i]);
 		if (ptr)
 			remove_env(&data->environ, ptr);
 		i++;

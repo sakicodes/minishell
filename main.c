@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	env_print(t_env *environ)
+int	env_print(t_env *environ)
 {
 	t_env	*current;
 
@@ -23,58 +23,43 @@ void	env_print(t_env *environ)
 			printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
+	return (1);
 }
 
-int	compare(t_data *data)
+int	compare(t_cmd *cmd, t_data *data)
 {
 	int	ret;
-	char	*cmd;
+	char	*command;
 	int	len;
 
 	ret = 0;
-	cmd = data->input[0];
-	len = ft_strlen(cmd);
-	if (ft_strncmp(cmd, "exit\0", len) == 0)
+	command = cmd->cmdwithflags[0];
+	len = ft_strlen(command);
+	if (ft_strncmp(command, "exit\0", len) == 0)
 	{
 		data->death = 1;
-		data->exit_status = exit_program(data);
-		ret = 1;
+		ret = exit_program(&data->exit_status, cmd);
 		printf("exit, goodbye!\n");
 	}
-	else if (ft_strncmp(cmd, "pwd\0", len) == 0)
+	else if (ft_strncmp(command, "pwd\0", len) == 0)
+		ret = printf("%s\n", data->curr_dir);
+	else if (ft_strncmp(command, "cd\0", len) == 0)
+		ret = change_directory(cmd, data);
+	else if (ft_strncmp(command, "env\0", len) == 0)
 	{
-		printf("%s\n", data->curr_dir);
-		ret = 1;
-	}
-	else if (ft_strncmp(cmd, "cd\0", len) == 0)
-	{
-		change_directory(data);
-		ret = 1;
-	}
-	else if (ft_strncmp(cmd, "env\0", len) == 0)
-	{
-		env_print(data->environ);
+		ret = env_print(data->environ);
 		data->exit_status = 0;
-		ret = 1;
 	}
-	else if (ft_strncmp(cmd, "echo\0", len) == 0)
-	{
-		echo(data);
-		ret = 1;
-	}
-	else if (ft_strncmp(cmd, "export\0", len) == 0)
-		ret = export(data);
-	else if (ft_strncmp(cmd, "unset\0", len) == 0)
-		ret = unset(data);
+	else if (ft_strncmp(command, "echo\0", len) == 0)
+		ret = echo(cmd, data);
+	else if (ft_strncmp(command, "export\0", len) == 0)
+		ret = export(cmd, data);
+	else if (ft_strncmp(command, "unset\0", len) == 0)
+		ret = unset(cmd, data);
 	else if (ft_strncmp(data->line, "test $?\0", 7) == 0)
 	{
 		ret = 1;
 		printf("%d\n", data->exit_status);
-	}
-	else if (ft_strncmp(data->line, "test blah\0", 9) == 0)
-	{
-		ret = 1;
-		printf("%s\n", data->line);
 	}
 	return (ret);
 }
@@ -138,17 +123,12 @@ void	start(t_data *data)
 			continue ;
 		add_history(data->line);
 		data->cmds = new_command(data->line, data->environ);
-		// parsing (split the line as necessary and save them to a char double ptr(char **input))
-		// if (compare(data) == 0) builtins done
-		// {
-		// 	// pipes, redirections, normal cmds etc etc (forking will be done as neccessary)
-		// 	// most prob will need to free the commands char double ptr 
-		// }
-		open_subprocess(data->cmds, data->environ, &data->exit_status);
-		printf("exit status: %d\n", data->exit_status);
+		if (compare(data->cmds, data) == 0)
+		{
+			open_subprocess(data->cmds, data->environ, &data->exit_status);
+		}
 		free_ptr(data->line);
 		free_ptr(data->prompt);
-		//free_dblptr((void **)data->input);
 		free_cmd(data->cmds);
 	}
 }
