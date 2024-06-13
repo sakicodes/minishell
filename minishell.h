@@ -50,6 +50,14 @@ typedef struct s_env {
 	struct s_env	*next;
 }				t_env;
 
+typedef struct s_node {
+	char	*line;
+	t_cmd	*cmd;
+	t_file	*file;
+	int		redir;
+	struct s_node	*next;
+}				t_node;
+
 typedef struct s_data {
 	char			curr_dir[1024];
 	char			*prompt;
@@ -59,6 +67,7 @@ typedef struct s_data {
 	t_cmd			*cmds;
 	t_file			*files;
 	t_env			*environ;
+	t_node			*node;
 	int				death;
 	unsigned int	exit_status;
 }				t_data;

@@ -113,6 +113,64 @@ void	open_subprocess(t_cmd *command, t_env *environ, unsigned int *exit_status)
 	}
 }
 
+t_node	*new_node(char *line, char *next, int index)
+{
+	t_node	*ret;
+	char	**split;
+
+	ret->line = line;
+	if (ft_strchr(line, '<'))
+	{
+		if (ft_strncmp(ft_strchr(line, '<'), "<<\0", 2) == 0)
+			ret->redir = 3;
+		else
+			ret->redir = 1;
+		split = ft_split(line, '<');
+	}
+	else if (ft_strchr(line, '>'))
+	{
+		if (ft_strncmp(ft_strchr(line, '>'), ">>\0", 2) == 0)
+			ret->redir = 4;
+		else
+			ret->redir = 2;
+		split = ft_split(line, '>');
+	}
+	else
+	{
+		ret->redir = 0;
+		split = ft_split(line, ' ');
+	}
+	if (next == NULL && index == 0)
+		ret->pipe_type = 0;
+	else if (next == NULL && index != 0)
+		ret->pipe_type = 3;
+	else
+	{
+		if (index == 0)
+			ret->pipe_type = 1;
+		else
+			ret->pipe_type = 2;
+	}
+	ret->next = NULL;
+	return (ret);
+}
+
+void	initialise_nodes(t_node *head, char *line)
+{
+	char	**split;
+	int	i;
+	t_node	*new;
+
+	i = 0;
+	split = ft_split(line, '|');
+	while (split[i])
+	{
+		new = new_node(split[i], split[i + 1], i);
+		add_node_back(&head, new);
+		i++;
+	}
+}
+
 void	start(t_data *data)
 {
 	while (data->death == 0)
@@ -122,7 +180,7 @@ void	start(t_data *data)
 		if (ft_strlen(data->line) == 0)
 			continue ;
 		add_history(data->line);
-		data->cmds = new_command(data->line, data->environ);
+		intialise_nodes(data->head, data->line);
 		if (compare(data->cmds, data) == 0)
 		{
 			open_subprocess(data->cmds, data->environ, &data->exit_status);
