@@ -138,7 +138,7 @@ t_file	*new_file(char	*line, int redir)
 	new = malloc(sizeof(t_file) * 1);
 	if (!new)
 		return (NULL);
-	new->filename = ft_strdup(line);
+	new->filename = ft_strtrim(line, " ");
 	new->fd = file_opener(new->filename, redir);
 	new->next = NULL;
 	return (new);
@@ -254,7 +254,7 @@ void	start(t_data *data)
 		// }
 		free_ptr(data->line);
 		free_ptr(data->prompt);
-		free_cmd(data->cmds);
+		free_nodes(data->node);
 	}
 }
 

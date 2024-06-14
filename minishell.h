@@ -51,7 +51,6 @@ typedef struct s_env {
 }				t_env;
 
 typedef struct s_node {
-	char	*line;
 	t_cmd	*cmd;
 	t_file	*file;
 	int		redir;

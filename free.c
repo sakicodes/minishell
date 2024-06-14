@@ -89,7 +89,6 @@ void	free_nodes(t_node *head)
 		head = head->next;
 		free_cmd(temp->cmd);
 		free_file(temp->file);
-		free_ptr(temp->line);
 		free(temp);
 	}
 }
