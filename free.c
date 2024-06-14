@@ -64,3 +64,32 @@ void	free_cmd(t_cmd *head)
 		free(temp);
 	}
 }
+
+void	free_file(t_file *file)
+{
+	t_file	*temp;
+
+	while (file)
+	{
+		temp = file;
+		file= file->next;
+		close(temp->fd);
+		free_ptr(temp->filename);
+		free(temp);
+	}
+}
+
+void	free_nodes(t_node *head)
+{
+	t_node	*temp;
+
+	while (head)
+	{
+		temp = head;
+		head = head->next;
+		free_cmd(temp->cmd);
+		free_file(temp->file);
+		free_ptr(temp->line);
+		free(temp);
+	}
+}

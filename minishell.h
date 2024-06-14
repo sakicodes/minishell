@@ -55,6 +55,7 @@ typedef struct s_node {
 	t_cmd	*cmd;
 	t_file	*file;
 	int		redir;
+	int		pipe_type;
 	struct s_node	*next;
 }				t_node;
 
@@ -77,6 +78,8 @@ void	free_ptr(void *ptr);
 void	free_dblptr(void **ptr);
 void	free_envnode(t_env *head);
 void	free_cmd(t_cmd *head);
+void	free_file(t_file *file);
+void	free_nodes(t_node *head);
 
 // initialise
 void	increase_shell_level(t_env *environ);
