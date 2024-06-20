@@ -123,7 +123,7 @@ int	file_opener(char *file, int type)
 	else if (type == 2)
 		fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	else if (type == 3)
-		fd = STDIN_FILENO;
+		fd = 0;
 	else if (type == 4)
 		fd = open(file, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (fd < 0)
@@ -238,6 +238,48 @@ t_node	*initialise_nodes(char *line, t_env *environ)
 	return (head);
 }
 
+void	print_nodes(t_node *head)
+{
+	t_node	*current;
+
+	current = head;
+	while (current)
+	{
+		printf("cmd->cmd: %s\n", current->cmd->cmd);
+		printf("cmd->executable: %s\n", current->cmd->executable);
+		printf("cmd->cmdwithflags: %s %s\n", current->cmd->cmdwithflags[0], current->cmd->cmdwithflags[1]);
+		if (current->file)
+		{
+			printf("file->filename: %s\n", current->file->filename);
+			printf("file->fd: %d\n", current->file->fd);
+		}
+		else
+			printf("file: NULL\n");
+		printf("redir: %d\n", current->redir);
+		printf("pipe_type: %d\n", current->pipe_type);
+		printf("-----------------------------\n");
+		current = current->next;
+	}
+}
+
+void	redirections(t_node *node)
+{
+	if (node->redir == 1)
+	{
+		dup2(node->file->fd, STDIN_FILENO);
+		close(node->file->fd);
+	}
+}
+
+void	do_process(t_node *node,t_data *data)
+{
+	if (!node)
+		return ;
+	if (node->redir != 0)
+		redirections(node);
+	open_subprocess(node->cmd, data->environ, &data->exit_status);
+}
+
 void	start(t_data *data)
 {
 	while (data->death == 0)
@@ -248,10 +290,8 @@ void	start(t_data *data)
 			continue ;
 		add_history(data->line);
 		data->node = initialise_nodes(data->line, data->environ);
-		// if (compare(data->cmds, data) == 0)
-		// {
-		// 	open_subprocess(data->cmds, data->environ, &data->exit_status);
-		// }
+		print_nodes(data->node);
+		do_process(data->node, data);
 		free_ptr(data->line);
 		free_ptr(data->prompt);
 		free_nodes(data->node);
