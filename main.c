@@ -262,13 +262,20 @@ void	print_nodes(t_node *head)
 	}
 }
 
-void	redirections(t_node *node)
+void	redirections(t_node *node, int *savedin)
 {
 	if (node->redir == 1)
 	{
+		*savedin = dup(STDIN_FILENO);
 		dup2(node->file->fd, STDIN_FILENO);
 		close(node->file->fd);
 	}
+}
+
+void	restore_stdin(int savedin)
+{
+	dup2(savedin, STDIN_FILENO);
+	close(savedin);
 }
 
 void	do_process(t_node *node,t_data *data)
@@ -276,8 +283,11 @@ void	do_process(t_node *node,t_data *data)
 	if (!node)
 		return ;
 	if (node->redir != 0)
-		redirections(node);
-	open_subprocess(node->cmd, data->environ, &data->exit_status);
+		redirections(node, &data->savedin);
+	if (compare(node->cmd, data) == 0)
+		open_subprocess(node->cmd, data->environ, &data->exit_status);
+	if (node->redir != 0)
+		restore_stdin(data->savedin);
 }
 
 void	start(t_data *data)

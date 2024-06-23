@@ -70,6 +70,8 @@ typedef struct s_data {
 	t_node			*node;
 	int				death;
 	unsigned int	exit_status;
+	int				savedin;
+	int				savedout;
 }				t_data;
 
 // free functions add under
