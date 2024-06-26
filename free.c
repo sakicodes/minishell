@@ -65,7 +65,7 @@ void	free_cmd(t_cmd *head)
 	}
 }
 
-void	free_file(t_file *file)
+void	free_file(t_file *file, int redir)
 {
 	t_file	*temp;
 
@@ -73,7 +73,8 @@ void	free_file(t_file *file)
 	{
 		temp = file;
 		file= file->next;
-		close(temp->fd);
+		if (redir != 3)
+			close(temp->fd);
 		free_ptr(temp->filename);
 		free(temp);
 	}
@@ -88,7 +89,7 @@ void	free_nodes(t_node *head)
 		temp = head;
 		head = head->next;
 		free_cmd(temp->cmd);
-		free_file(temp->file);
+		free_file(temp->file, temp->redir);
 		free(temp);
 	}
 }

@@ -272,7 +272,7 @@ void	redirections(t_node *node, int *savedin, int *savedout)
 		dup2(node->file->fd, STDIN_FILENO);
 		close(node->file->fd);
 	}
-	else if (node->redir == 2)
+	else if (node->redir == 2 || node->redir == 4)
 	{
 		*savedout = dup(STDOUT_FILENO);
 		dup2(node->file->fd, STDOUT_FILENO);
@@ -282,7 +282,7 @@ void	redirections(t_node *node, int *savedin, int *savedout)
 
 void	restore_std(int savedin, int savedout, int redir)
 {
-	if (redir == 1 || redir == 3)
+	if (redir == 1)
 	{
 		dup2(savedin, STDIN_FILENO);
 		close(savedin);
@@ -300,7 +300,7 @@ void	do_process(t_node *node,t_data *data)
 		return ;
 	if (node->redir != 0)
 		redirections(node, &data->savedin, &data->savedout);
-	if (compare(node->cmd, data) == 0)
+	if (compare(node->cmd, data) == 0 && node->redir != 3)
 		open_subprocess(node->cmd, data->environ, &data->exit_status);
 	if (node->redir != 0)
 		restore_std(data->savedin, data->savedout, node->redir);

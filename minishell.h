@@ -79,7 +79,7 @@ void	free_ptr(void *ptr);
 void	free_dblptr(void **ptr);
 void	free_envnode(t_env *head);
 void	free_cmd(t_cmd *head);
-void	free_file(t_file *file);
+void	free_file(t_file *file, int redir);
 void	free_nodes(t_node *head);
 
 // initialise
