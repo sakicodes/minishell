@@ -149,7 +149,6 @@ t_node	*new_node(char *line, char *next, int index, t_env *environ)
 	t_node	*ret;
 	char	**split;
 
-	//ret->line = line;
 	ret = malloc(sizeof(t_node) * 1);
 	if (!ret)
 		return (NULL);
@@ -272,15 +271,21 @@ void	heredoc_child(char *limit, int file, t_data *data)
 	{
 		write (1, "> \0", 2);
 		line = get_next_line(STDIN_FILENO);
+		if (line == NULL)
+		{
+			free_data(data);
+			exit(EXIT_FAILURE);
+		}
 		if (ft_strncmp(line, limit, ft_strlen(limit)) == 0)
 		{
-			free(line);
+			free_ptr(line);
 			free_data(data);
 			exit(EXIT_SUCCESS);
 		}
 		ft_putstr_fd(line, file);
-		free(line);
+		free_ptr(line);
 	}
+	free_ptr(line);
 }
 
 void	ft_heredoc(char *limit, t_data *data)
@@ -389,7 +394,6 @@ int main(int argc, char **argv, char **envp)
 	}
 	// signal handling
 	start(&data);
-	// free_envnode(data.environ);
-	free_data(&data);
+	free_envnode(data.environ);
 	return (data.exit_status);
 }

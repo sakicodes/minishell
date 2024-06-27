@@ -31,8 +31,11 @@ static void	insert_string(char *str, int n)
 {
 	int	i;
 
-	if (str[0] == '-')
+	if (n < 0)
+	{
 		i = 1;
+		n = -n;
+	}
 	else
 		i = 0;
 	if (n == 0)
@@ -82,10 +85,7 @@ char	*ft_itoa(int n)
 	if (str == NULL)
 		return (NULL);
 	if (n < 0)
-	{
 		str[0] = '-';
-		n = -n;
-	}
 	insert_string(str, n);
 	reverse_string(str);
 	return (str);
