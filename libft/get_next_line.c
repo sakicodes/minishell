@@ -81,6 +81,11 @@ static char	*gnl_extract_and_flush(char **saved)
 		line = ft_substr(*saved, 0, savedlen - remlen);
 		temp = *saved;
 		*saved = ft_substr((ft_strchr(*saved, '\n') + 1), 0, remlen);
+		if (ft_strlen(*saved) == 0)
+		{
+			free(*saved);
+			*saved = NULL;
+		}
 		free(temp);
 	}
 	if (!line)
