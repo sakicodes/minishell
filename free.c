@@ -93,3 +93,11 @@ void	free_nodes(t_node *head)
 		free(temp);
 	}
 }
+
+void	free_data(t_data *data)
+{
+	free_ptr(data->prompt);
+	free_ptr(data->line);
+	free_nodes(data->node);
+	free_envnode(data->environ);
+}

@@ -39,7 +39,7 @@ int	compare(t_cmd *cmd, t_data *data)
 	{
 		data->death = 1;
 		ret = exit_program(&data->exit_status, cmd);
-		printf("exit, goodbye!\n");
+		ft_putstr_fd("exit, goodbye!\n\0", STDERR_FILENO);
 	}
 	else if (ft_strncmp(command, "pwd\0", len) == 0)
 		ret = printf("%s\n", data->curr_dir);
@@ -264,7 +264,51 @@ void	print_nodes(t_node *head)
 	}
 }
 
-void	redirections(t_node *node, int *savedin, int *savedout)
+void	heredoc_child(char *limit, int file, t_data *data)
+{
+	char	*line;
+
+	while (1)
+	{
+		write (1, "> \0", 2);
+		line = get_next_line(STDIN_FILENO);
+		if (ft_strncmp(line, limit, ft_strlen(limit)) == 0)
+		{
+			free(line);
+			free_data(data);
+			exit(EXIT_SUCCESS);
+		}
+		ft_putstr_fd(line, file);
+		free(line);
+	}
+}
+
+void	ft_heredoc(char *limit, t_data *data)
+{
+	int	pipe_fd[2];
+	pid_t	process;
+
+	if (pipe(pipe_fd) == -1)
+		exit_handler('p', NULL);
+	process = fork();
+	if (process == -1)
+		exit_handler('f', NULL);
+	if (process == 0)
+	{
+		close(pipe_fd[0]);
+		heredoc_child(limit, pipe_fd[1], data);
+		close(pipe_fd[1]);
+	}
+	else
+	{
+		close(pipe_fd[1]);
+		waitpid(process, NULL, 0);
+		dup2(pipe_fd[0], STDIN_FILENO);
+		close(pipe_fd[0]);
+	}
+}
+
+void	redirections(t_node *node, int *savedin, int *savedout, t_data *data)
 {
 	if (node->redir == 1)
 	{
@@ -278,11 +322,16 @@ void	redirections(t_node *node, int *savedin, int *savedout)
 		dup2(node->file->fd, STDOUT_FILENO);
 		close(node->file->fd);
 	}
+	else if (node->redir == 3)
+	{
+		*savedin = dup(STDIN_FILENO);
+		ft_heredoc(node->file->filename, data);
+	}
 }
 
 void	restore_std(int savedin, int savedout, int redir)
 {
-	if (redir == 1)
+	if (redir == 1 || redir == 3)
 	{
 		dup2(savedin, STDIN_FILENO);
 		close(savedin);
@@ -299,8 +348,8 @@ void	do_process(t_node *node,t_data *data)
 	if (!node)
 		return ;
 	if (node->redir != 0)
-		redirections(node, &data->savedin, &data->savedout);
-	if (compare(node->cmd, data) == 0 && node->redir != 3)
+		redirections(node, &data->savedin, &data->savedout, data);
+	if (compare(node->cmd, data) == 0)
 		open_subprocess(node->cmd, data->environ, &data->exit_status);
 	if (node->redir != 0)
 		restore_std(data->savedin, data->savedout, node->redir);
@@ -340,6 +389,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	// signal handling
 	start(&data);
-	free_envnode(data.environ);
+	// free_envnode(data.environ);
+	free_data(&data);
 	return (data.exit_status);
 }

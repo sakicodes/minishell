@@ -62,10 +62,6 @@ typedef struct s_data {
 	char			curr_dir[1024];
 	char			*prompt;
 	char			*line;
-	char			**input;
-	char			**env;
-	t_cmd			*cmds;
-	t_file			*files;
 	t_env			*environ;
 	t_node			*node;
 	int				death;
@@ -81,6 +77,7 @@ void	free_envnode(t_env *head);
 void	free_cmd(t_cmd *head);
 void	free_file(t_file *file, int redir);
 void	free_nodes(t_node *head);
+void	free_data(t_data *data);
 
 // initialise
 void	increase_shell_level(t_env *environ);
