@@ -306,8 +306,8 @@ void	ft_heredoc(char *limit, t_data *data)
 	}
 	else
 	{
-		close(pipe_fd[1]);
 		waitpid(process, NULL, 0);
+		close(pipe_fd[1]);
 		dup2(pipe_fd[0], STDIN_FILENO);
 		close(pipe_fd[0]);
 	}
